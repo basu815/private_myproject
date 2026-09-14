@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodieGo — Food Delivery</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--orange:#ff5a36;--dark:#171717;--muted:#777;--bg:#fffaf7;--card:#fff;--line:#eee}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--dark)}
+button,input{font:inherit}
+header{position:sticky;top:0;z-index:10;background:rgba(255,250,247,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{max-width:1180px;margin:auto;padding:17px 22px;display:flex;align-items:center;gap:28px}
+.logo{font-size:25px;font-weight:900;color:var(--orange);letter-spacing:-1px}.logo span{color:#171717}
+.location{font-size:13px;color:var(--muted);margin-left:auto}.location b{color:#222}
+.search{display:flex;align-items:center;background:white;border:1px solid #eee;border-radius:14px;padding:10px 14px;width:250px;box-shadow:0 5px 20px #00000008}.search input{border:0;outline:0;width:100%;margin-left:8px}
+.nav button{border:0;background:white;padding:10px 14px;border-radius:12px;cursor:pointer}.cart{background:var(--dark)!important;color:#fff;padding:11px 16px!important}
+.hero{max-width:1180px;margin:30px auto;padding:0 22px}
+.heroBox{min-height:340px;border-radius:30px;padding:52px;display:flex;align-items:center;overflow:hidden;position:relative;background:linear-gradient(120deg,#fff0e8,#ffd6bf)}
+.heroText{max-width:560px;z-index:2}.eyebrow{color:var(--orange);font-weight:800;font-size:14px;margin-bottom:12px}.hero h1{font-size:54px;line-height:1.02;letter-spacing:-2.5px;margin-bottom:16px}.hero p{color:#666;font-size:17px;line-height:1.6;max-width:500px}.cta{margin-top:25px;border:0;background:var(--orange);color:white;padding:14px 22px;border-radius:14px;font-weight:800;cursor:pointer;box-shadow:0 12px 25px #ff5a3640}
+.heroArt{position:absolute;right:35px;font-size:190px;filter:drop-shadow(0 25px 25px #b64b2530);transform:rotate(-8deg)}
+main{max-width:1180px;margin:auto;padding:0 22px 60px}
+.sectionHead{display:flex;align-items:end;justify-content:space-between;margin:30px 0 17px}.sectionHead h2{font-size:25px}.view{color:var(--orange);font-weight:700;cursor:pointer}
+.categories{display:flex;gap:13px;overflow:auto;padding-bottom:7px}.cat{min-width:100px;background:white;border:1px solid #eee;border-radius:18px;padding:15px 12px;text-align:center;cursor:pointer;transition:.2s}.cat:hover,.cat.active{transform:translateY(-3px);border-color:#ffb7a4;box-shadow:0 10px 24px #0000000c}.cat .emoji{font-size:34px;display:block;margin-bottom:6px}.cat b{font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.food{background:white;border-radius:20px;overflow:hidden;border:1px solid #eee;box-shadow:0 8px 25px #00000008;transition:.25s}.food:hover{transform:translateY(-5px);box-shadow:0 15px 35px #00000012}.foodImg{height:175px;display:flex;align-items:center;justify-content:center;font-size:90px;background:linear-gradient(135deg,#fff3eb,#ffe2d2);position:relative}.badge{position:absolute;left:12px;top:12px;background:#171717;color:#fff;font-size:11px;padding:6px 9px;border-radius:9px}.heart{position:absolute;right:12px;top:12px;border:0;background:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer}.info{padding:15px}.info h3{font-size:17px}.restaurant{font-size:12px;color:#888;margin:5px 0 10px}.meta{display:flex;gap:9px;font-size:12px;color:#666}.rating{color:#e89400;font-weight:800}.price{font-weight:900;color:#222}.add{margin-top:13px;width:100%;border:0;background:#fff1ec;color:var(--orange);padding:10px;border-radius:11px;font-weight:800;cursor:pointer}.add:hover{background:var(--orange);color:white}
+.banner{margin-top:35px;background:#181818;color:white;border-radius:23px;padding:25px 30px;display:flex;align-items:center;justify-content:space-between}.banner h2{font-size:25px}.banner p{color:#bbb;margin-top:5px}.banner button{border:0;background:var(--orange);color:white;padding:12px 18px;border-radius:11px;font-weight:800}
+footer{background:#171717;color:#aaa;padding:35px 22px;text-align:center}footer strong{color:#fff}
+.toast{position:fixed;right:20px;bottom:20px;background:#171717;color:white;padding:14px 18px;border-radius:13px;opacity:0;transform:translateY(15px);transition:.25s;z-index:20}.toast.show{opacity:1;transform:none}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.search{display:none}.hero h1{font-size:43px}.heroArt{opacity:.3}}
+@media(max-width:600px){.nav{gap:12px}.location{display:none}.heroBox{padding:35px 25px}.heroArt{font-size:120px;right:-10px}.grid{grid-template-columns:1fr}.banner{gap:15px;flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<header><nav class="nav">
+<div class="logo">Foodie<span>Go</span> 🍴</div>
+<div class="location">📍 Deliver to <b>Home</b></div>
+<div class="search">🔎 <input id="search" placeholder="Search dishes or restaurants..."></div>
+<button>♡</button><button class="cart" onclick="showToast('Cart opened 🛒')">🛒 Cart <span id="count">0</span></button>
+</nav></header>
+
+<section class="hero"><div class="heroBox">
+<div class="heroText"><div class="eyebrow">🔥 FREE DELIVERY TODAY</div><h1>Good food.<br>Good mood.</h1><p>Discover delicious meals from your favorite local restaurants and get them delivered hot and fresh to your door.</p><button class="cta" onclick="document.getElementById('popular').scrollIntoView({behavior:'smooth'})">Order Now →</button></div>
+<div class="heroArt">🍔</div>
+</div></section>
+
+<main>
+<div class="sectionHead"><h2>What are you craving?</h2><span class="view">View all →</span></div>
+<div class="categories">
+<div class="cat active"><span class="emoji">🍔</span><b>Burgers</b></div><div class="cat"><span class="emoji">🍕</span><b>Pizza</b></div><div class="cat"><span class="emoji">🍜</span><b>Noodles</b></div><div class="cat"><span class="emoji">🍛</span><b>Indian</b></div><div class="cat"><span class="emoji">🥗</span><b>Healthy</b></div><div class="cat"><span class="emoji">🍰</span><b>Desserts</b></div><div class="cat"><span class="emoji">☕</span><b>Cafe</b></div>
+</div>
+
+<div class="sectionHead" id="popular"><h2>Popular near you</h2><span class="view">See all →</span></div>
+<div class="grid" id="foodGrid">
+<article class="food" data-name="Classic Cheeseburger burger"><div class="foodImg"><span class="badge">BESTSELLER</span><button class="heart">♡</button>🍔</div><div class="info"><h3>Classic Cheeseburger</h3><p class="restaurant">Burger House</p><div class="meta"><span class="rating">★ 4.8</span><span>25 min</span><span class="price">₹249</span></div><button class="add" onclick="addCart('Classic Cheeseburger')">+ Add to cart</button></div></article>
+<article class="food" data-name="Margherita Pizza pizza"><div class="foodImg"><span class="badge">20% OFF</span><button class="heart">♡</button>🍕</div><div class="info"><h3>Margherita Pizza</h3><p class="restaurant">La Bella Pizza</p><div class="meta"><span class="rating">★ 4.7</span><span>30 min</span><span class="price">₹299</span></div><button class="add" onclick="addCart('Margherita Pizza')">+ Add to cart</button></div></article>
+<article class="food" data-name="Paneer Butter Masala indian"><div class="foodImg"><button class="heart">♡</button>🍛</div><div class="info"><h3>Paneer Butter Masala</h3><p class="restaurant">Spice Garden</p><div class="meta"><span class="rating">★ 4.9</span><span>28 min</span><span class="price">₹279</span></div><button class="add" onclick="addCart('Paneer Butter Masala')">+ Add to cart</button></div></article>
+<article class="food" data-name="Chocolate Cake dessert"><div class="foodImg"><span class="badge">POPULAR</span><button class="heart">♡</button>🍰</div><div class="info"><h3>Chocolate Cake</h3><p class="restaurant">Sweet Cravings</p><div class="meta"><span class="rating">★ 4.8</span><span>20 min</span><span class="price">₹199</span></div><button class="add" onclick="addCart('Chocolate Cake')">+ Add to cart</button></div></article>
+</div>
+
+<div class="banner"><div><h2>Hungry? We have a deal for you 🎉</h2><p>Get 40% OFF on your first order up to ₹150.</p></div><button onclick="showToast('Offer applied! 🎁')">GET OFFER</button></div>
+</main>
+<footer><strong>FoodieGo</strong> — Your favorite food, delivered with love ❤️<br><small>© 2026 FoodieGo. Static demo website.</small></footer>
+<div class="toast" id="toast"></div>
+<script>
+let cart=0;
+function addCart(item){cart++;document.getElementById('count').textContent=cart;showToast(item+' added to cart 🛒')}
+function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),1800)}
+document.querySelectorAll('.heart').forEach(b=>b.onclick=()=>{b.textContent=b.textContent==='♡'?'♥':'♡';showToast(b.textContent==='♥'?'Added to favorites ❤️':'Removed from favorites')});
+document.querySelectorAll('.cat').forEach(c=>c.onclick=()=>{document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));c.classList.add('active');showToast(c.innerText+' selected')});
+document.getElementById('search').addEventListener('input',e=>{let q=e.target.value.toLowerCase();document.querySelectorAll('.food').forEach(x=>x.style.display=x.dataset.name.includes(q)?'block':'none')});
+</script>
+</body>
+</html>
